@@ -162,11 +162,11 @@ int main(int argc, char **argv) {
 		}
 		void detectSheepCollide(Sheep anotherSheep) {
 			if(direction.x==1) {
-				if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1) {
+				if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
 					collide_type = SHEEP;
 					collide_direction = RIGHT;
 				}
-				else if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1) {
+				else if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
 					collide_type = SHEEP;
 					if(anotherSheep.getDirection()==UP) {
 						collide_direction = DOWN;
@@ -177,11 +177,11 @@ int main(int argc, char **argv) {
 				}
 			}
 			else if(direction.y==1) {
-				if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1) {
+				if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
 					collide_type = SHEEP;
 					collide_direction = UP;
 				}
-				else if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1) {
+				else if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
 					collide_type = SHEEP;
 					if(anotherSheep.getDirection()==RIGHT) {
 						collide_direction = LEFT;
@@ -192,11 +192,11 @@ int main(int argc, char **argv) {
 				}
 			}
 			else if(direction.x==-1) {
-				if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1) {
+				if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
 					collide_type = SHEEP;
 					collide_direction = LEFT;
 				}
-				else if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1) {
+				else if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
 					collide_type = SHEEP;
 					if(anotherSheep.getDirection()==UP) {
 						collide_direction = DOWN;
@@ -207,11 +207,11 @@ int main(int argc, char **argv) {
 				}
 			}
 			else if(direction.y==-1) {
-				if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1) {
+				if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
 					collide_type = SHEEP;
 					collide_direction = DOWN;
 				}
-				else if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1) {
+				else if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
 					collide_type = SHEEP;
 					if(anotherSheep.getDirection()==RIGHT) {
 						collide_direction = LEFT;
