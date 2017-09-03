@@ -1,6 +1,6 @@
 # Shepherd Dog
 
-Shepherd Dog is a single-player game based on Base0, which is the starter code for the game0 in the 15-466-f17 course developed by Jim McCann.
+Shepherd Dog is a single-player game developed by Glory Chen based on Base0, which is the starter code for the game0 in the 15-466-f17 course developed by Jim McCann.
 
 In the game, the player will control the location of the shepherd dog with the mouse. The goal is to prevent any of the sheep from escaping from the area by touching them, forcing them to change their direction. Watch out that the sheep would become faster as the time passes!
 
