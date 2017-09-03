@@ -16,6 +16,12 @@ The design document with more details is available [here](http://graphics.cs.cmu
 ## Building
 
 This game was built with Visual Studio 2015 on Windows 10 when developing.
+
+Clone [kit-libs-win](https://github.com/ixchow/kit-libs-win) into the kit-libs-win subdirectory:
+```
+  git clone https://github.com/ixchow/kit-libs-win
+```
+Now you can:
 ```
   cl.exe /EHsc /W3 /WX /MD /Ikit-libs-win\out\include /Ikit-libs-win\out\include\SDL2 main.cpp Draw.cpp gl_shims.cpp /link /SUBSYSTEM:CONSOLE /LIBPATH:kit-libs-win\out\lib SDL2main.lib SDL2.lib OpenGL32.lib
 ```
