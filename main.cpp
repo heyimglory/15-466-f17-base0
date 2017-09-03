@@ -8,6 +8,202 @@
 #include <iostream>
 #include <ctime>
 
+#define NONE 0
+#define SHEEP 1
+#define SHEPHERD 2
+#define SHEPHERD_WAIT 3
+#define RIGHT 1
+#define UP 2
+#define LEFT 3
+#define DOWN 4
+	
+class Sheep {
+private:
+	glm::vec2 init_location;
+	glm::vec2 location;
+	glm::vec2 direction;
+	float speed;
+	int collide_type;
+	int collide_direction;
+public:
+	Sheep() {};
+	Sheep(float x, float y) {
+		init_location = glm::vec2(x, y);
+		initSheep();
+	}
+	void initSheep() {
+		location.x = init_location.x;
+		location.y = init_location.y;
+		switch(std::rand() % 4) {
+			case 0: {
+				direction.x = 1;
+				direction.y = 0;
+				break;
+			}
+			case 1: {
+				direction.x = 0;
+				direction.y = 1;
+				break;
+			}
+			case 2: {
+				direction.x = -1;
+				direction.y = 0;
+				break;
+			}
+			case 3: {
+				direction.x = 0;
+				direction.y = -1;
+				break;
+			}
+		}
+		speed = 0.001f;
+		collide_type = NONE;
+		collide_direction = NONE;
+		return;
+	}
+	void move() {
+		location.x += speed * direction.x;
+		location.y += speed * direction.y;
+		return;
+	}
+	glm::vec2 getLocation() {
+		return location;
+	}
+	int getDirection() {
+		if(direction.x==1) {
+			return RIGHT;
+		}
+		else if(direction.y==1) {
+			return UP;
+		}
+		else if(direction.x==-1) {
+			return LEFT;
+		}
+		else {
+			return DOWN;
+		}
+	}
+	bool outOfArea() {
+		if(location.x>=0.85f || location.x<=-0.85f || location.y>=0.85f || location.y<=-0.85f) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	void detectSheepCollide(Sheep anotherSheep) {
+		if(direction.x==1) {
+			if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
+				collide_type = SHEEP;
+				collide_direction = RIGHT;
+			}
+			else if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
+				collide_type = SHEEP;
+				if(anotherSheep.getDirection()==UP) {
+					collide_direction = DOWN;
+				}
+				else {
+					collide_direction = UP;
+				}
+			}
+		}
+		else if(direction.y==1) {
+			if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
+				collide_type = SHEEP;
+				collide_direction = UP;
+			}
+			else if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
+				collide_type = SHEEP;
+				if(anotherSheep.getDirection()==RIGHT) {
+					collide_direction = LEFT;
+				}
+				else {
+					collide_direction = RIGHT;
+				}
+			}
+		}
+		else if(direction.x==-1) {
+			if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
+				collide_type = SHEEP;
+				collide_direction = LEFT;
+			}
+			else if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
+				collide_type = SHEEP;
+				if(anotherSheep.getDirection()==UP) {
+					collide_direction = DOWN;
+				}
+				else {
+					collide_direction = UP;
+				}
+			}
+		}
+		else if(direction.y==-1) {
+			if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
+				collide_type = SHEEP;
+				collide_direction = DOWN;
+			}
+			else if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
+				collide_type = SHEEP;
+				if(anotherSheep.getDirection()==RIGHT) {
+					collide_direction = LEFT;
+				}
+				else {
+					collide_direction = RIGHT;
+				}
+			}
+		}
+		return;
+	}
+	void detectShepherdCollide(glm::vec2 mouse) {
+		if(abs(location.x-mouse.x)<=0.1 && abs(location.y-mouse.y)<=0.1 && collide_type==NONE) {
+			collide_type = SHEPHERD;
+		}
+		else if((abs(location.x-mouse.x)>=0.1 || abs(location.y-mouse.y)>=0.1) && collide_type==SHEPHERD_WAIT) {
+			collide_type = NONE;
+		}
+		return;
+	}
+	void turn() {
+		if(collide_type == SHEEP)
+		{
+			switch(collide_direction) {
+				case RIGHT: {
+					direction.x = -1;
+					direction.y = 0;
+					break;
+				}
+				case UP: {
+					direction.x = 0;
+					direction.y = -1;
+					break;
+				}
+				case LEFT: {
+					direction.x = 1;
+					direction.y = 0;
+					break;
+				}
+				case DOWN: {
+					direction.x = 0;
+					direction.y = 1;
+					break;
+				}
+			}
+			collide_type = NONE;
+			collide_direction = NONE;
+		}
+		else if(collide_type == SHEPHERD) {
+			direction.x *= -1;
+			direction.y *= -1;
+			collide_type = SHEPHERD_WAIT;
+		}
+		return;
+	}
+	void speedUp() {
+		speed *= 1.07f;
+		return;
+	}
+};
+
 int main(int argc, char **argv) {
 	//Configuration:
 	struct {
@@ -76,207 +272,21 @@ int main(int argc, char **argv) {
 	SDL_ShowCursor(SDL_DISABLE);
 
 	//------------  game state ------------
-	#define NONE 0
-	#define SHEEP 1
-	#define SHEPHERD 2
-	#define SHEPHERD_WAIT 3
-	#define RIGHT 1
-	#define UP 2
-	#define LEFT 3
-	#define DOWN 4
-	
-	class Sheep {
-		private:
-			glm::vec2 init_location;
-			glm::vec2 location;
-			glm::vec2 direction;
-			float speed;
-			int collide_type;
-			int collide_direction;
-		public:
-		Sheep() {};
-		Sheep(float x, float y) {
-			init_location = glm::vec2(x, y);
-			//std::srand((unsigned)std::time(0));
-			switch(std::rand() % 4) {
-				case 0: {
-					direction.x = 1;
-					direction.y = 0;
-					break;
-				}
-				case 1: {
-					direction.x = 0;
-					direction.y = 1;
-					break;
-				}
-				case 2: {
-					direction.x = -1;
-					direction.y = 0;
-					break;
-				}
-				case 3: {
-					direction.x = 0;
-					direction.y = -1;
-					break;
-				}
-			}
-			initSheep();
-		}
-		void initSheep() {
-			location.x = init_location.x;
-			location.y = init_location.y;
-			speed = 0.001f;
-			collide_type = NONE;
-			collide_direction = NONE;
-			return;
-		}
-		void move() {
-			location.x += speed * direction.x;
-			location.y += speed * direction.y;
-			return;
-		}
-		glm::vec2 getLocation() {
-			return location;
-		}
-		int getDirection() {
-			if(direction.x==1) {
-				return RIGHT;
-			}
-			else if(direction.y==1) {
-				return UP;
-			}
-			else if(direction.x==-1) {
-				return LEFT;
-			}
-			else {
-				return DOWN;
-			}
-		}
-		bool outOfArea() {
-			if(location.x>=0.85f || location.x<=-0.85f || location.y>=0.85f || location.y<=-0.85f) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		void detectSheepCollide(Sheep anotherSheep) {
-			if(direction.x==1) {
-				if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
-					collide_type = SHEEP;
-					collide_direction = RIGHT;
-				}
-				else if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
-					collide_type = SHEEP;
-					if(anotherSheep.getDirection()==UP) {
-						collide_direction = DOWN;
-					}
-					else {
-						collide_direction = UP;
-					}
-				}
-			}
-			else if(direction.y==1) {
-				if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
-					collide_type = SHEEP;
-					collide_direction = UP;
-				}
-				else if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
-					collide_type = SHEEP;
-					if(anotherSheep.getDirection()==RIGHT) {
-						collide_direction = LEFT;
-					}
-					else {
-						collide_direction = RIGHT;
-					}
-				}
-			}
-			else if(direction.x==-1) {
-				if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
-					collide_type = SHEEP;
-					collide_direction = LEFT;
-				}
-				else if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
-					collide_type = SHEEP;
-					if(anotherSheep.getDirection()==UP) {
-						collide_direction = DOWN;
-					}
-					else {
-						collide_direction = UP;
-					}
-				}
-			}
-			else if(direction.y==-1) {
-				if(abs(location.x-anotherSheep.getLocation().x)<0.1 && abs(location.y-anotherSheep.getLocation().y)<=0.1 && abs(location.x-anotherSheep.getLocation().x)<abs(location.y-anotherSheep.getLocation().y)) {
-					collide_type = SHEEP;
-					collide_direction = DOWN;
-				}
-				else if(abs(location.x-anotherSheep.getLocation().x)<=0.1 && abs(location.y-anotherSheep.getLocation().y)<0.1 && abs(location.x-anotherSheep.getLocation().x)>abs(location.y-anotherSheep.getLocation().y)) {
-					collide_type = SHEEP;
-					if(anotherSheep.getDirection()==RIGHT) {
-						collide_direction = LEFT;
-					}
-					else {
-						collide_direction = RIGHT;
-					}
-				}
-			}
-			return;
-		}
-		void detectShepherdCollide(glm::vec2 mouse) {
-			if(abs(location.x-mouse.x)<=0.1 && abs(location.y-mouse.y)<=0.1 && collide_type==NONE) {
-				collide_type = SHEPHERD;
-			}
-			else if((abs(location.x-mouse.x)>=0.1 || abs(location.y-mouse.y)>=0.1) && collide_type==SHEPHERD_WAIT) {
-				collide_type = NONE;
-			}
-			return;
-		}
-		void turn() {
-			if(collide_type == SHEEP)
-			{
-				switch(collide_direction) {
-					case RIGHT: {
-						direction.x = -1;
-						direction.y = 0;
-						break;
-					}
-					case UP: {
-						direction.x = 0;
-						direction.y = -1;
-						break;
-					}
-					case LEFT: {
-						direction.x = 1;
-						direction.y = 0;
-						break;
-					}
-					case DOWN: {
-						direction.x = 0;
-						direction.y = 1;
-						break;
-					}
-				}
-				collide_type = NONE;
-				collide_direction = NONE;
-			}
-			else if(collide_type == SHEPHERD) {
-				direction.x *= -1;
-				direction.y *= -1;
-				collide_type = SHEPHERD_WAIT;
-			}
-			return;
-		}
-	};
+	std::srand((unsigned)std::time(0));
 	glm::vec2 mouse = glm::vec2(0.0f, 0.0f);
 
 	//------------  game loop ------------
 
 	auto previous_time = std::chrono::high_resolution_clock::now();
 	bool should_quit = false;
-	bool play = false;
 	bool alive = true;
-	Sheep sheep1(0.0f, 0.5f), sheep2(-0.5f, 0.1f), sheep3(0.5f, 0.1f), sheep4(0.3f, -0.4f), sheep5(-0.3f, -0.4f);
+	float passed_time = 0;
+	float level_time = 0;
+	Sheep sheep1(0.0f, 0.5f);
+	Sheep sheep2(-0.5f, 0.1f);
+	Sheep sheep3(0.5f, 0.1f);
+	Sheep sheep4(0.3f, -0.4f);
+	Sheep sheep5(-0.3f, -0.4f);
 	while (true) {
 		static SDL_Event evt;
 		while (SDL_PollEvent(&evt) == 1) {
@@ -285,8 +295,16 @@ int main(int argc, char **argv) {
 				mouse.x = (evt.motion.x + 0.5f) / float(config.size.x) * 2.0f - 1.0f;
 				mouse.y = (evt.motion.y + 0.5f) / float(config.size.y) *-2.0f + 1.0f;
 			} else if (evt.type == SDL_MOUSEBUTTONDOWN) {
-				play = true;
-				alive = true;
+				if(!alive) {
+					alive = true;
+					passed_time = 0;
+					level_time = 0;
+					sheep1.initSheep();
+					sheep2.initSheep();
+					sheep3.initSheep();
+					sheep4.initSheep();
+					sheep5.initSheep();
+				}
 			} else if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE) {
 				should_quit = true;
 			} else if (evt.type == SDL_QUIT) {
@@ -301,7 +319,18 @@ int main(int argc, char **argv) {
 			auto current_time = std::chrono::high_resolution_clock::now();
 			float elapsed = std::chrono::duration< float >(current_time - previous_time).count();
 			previous_time = current_time;
-
+			passed_time += elapsed;
+			printf("%f\n", passed_time);
+			//adjust the speed of the sheep
+			level_time += elapsed;
+			if(level_time>0.7) {
+				level_time -= 0.7f;
+				sheep1.speedUp();
+				sheep2.speedUp();
+				sheep3.speedUp();
+				sheep4.speedUp();
+				sheep5.speedUp();
+			}
 			{ //update game state:
 				//move to the next location
 				sheep1.move();
@@ -367,20 +396,15 @@ int main(int argc, char **argv) {
 				draw.add_rectangle(mouse + glm::vec2(-0.05f,-0.05f), mouse + glm::vec2(0.05f, 0.05f), glm::u8vec4(0x00, 0x00, 0x00, 0xff));
 				draw.draw();
 			}
-
-
-			SDL_GL_SwapWindow(window);
 		}
 		// when a round ends
-		else {
-			sheep1.initSheep();
-			sheep2.initSheep();
-			sheep3.initSheep();
-			sheep4.initSheep();
-			sheep5.initSheep();
+		else if(passed_time!=0) {
+			Draw score;
+			score.add_rectangle(glm::vec2(-0.8f, 0.2f), glm::vec2(0.8f, -0.2f), glm::u8vec4(0xff, 0xff, 0x05, 0xff));
+			score.draw();
 		}
+		SDL_GL_SwapWindow(window);
 	}
-
 
 	//------------  teardown ------------
 
