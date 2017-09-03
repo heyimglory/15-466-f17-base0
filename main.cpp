@@ -199,7 +199,7 @@ public:
 		return;
 	}
 	void speedUp() {
-		speed *= 1.07f;
+		speed *= 1.06f;
 		return;
 	}
 };
@@ -320,7 +320,6 @@ int main(int argc, char **argv) {
 			float elapsed = std::chrono::duration< float >(current_time - previous_time).count();
 			previous_time = current_time;
 			passed_time += elapsed;
-			printf("%f\n", passed_time);
 			//adjust the speed of the sheep
 			level_time += elapsed;
 			if(level_time>0.7) {
@@ -341,6 +340,7 @@ int main(int argc, char **argv) {
 				//check if any sheep is out of the area
 				if(sheep1.outOfArea() || sheep2.outOfArea() || sheep3.outOfArea() || sheep4.outOfArea() || sheep5.outOfArea()) {
 					alive = false;
+					printf("\nSurvival Time: %f\n", passed_time);
 				}
 				//check collision with the shepherd
 				sheep1.detectShepherdCollide(mouse);
@@ -396,12 +396,6 @@ int main(int argc, char **argv) {
 				draw.add_rectangle(mouse + glm::vec2(-0.05f,-0.05f), mouse + glm::vec2(0.05f, 0.05f), glm::u8vec4(0x00, 0x00, 0x00, 0xff));
 				draw.draw();
 			}
-		}
-		// when a round ends
-		else if(passed_time!=0) {
-			Draw score;
-			score.add_rectangle(glm::vec2(-0.8f, 0.2f), glm::vec2(0.8f, -0.2f), glm::u8vec4(0xff, 0xff, 0x05, 0xff));
-			score.draw();
 		}
 		SDL_GL_SwapWindow(window);
 	}
